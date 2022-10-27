@@ -26,7 +26,7 @@
           </v-list>
         </v-menu>
 
-        <v-btn to="/cabinet/settings" v-if="user" >Кабинет</v-btn>
+        <v-btn to="/cabinet/settings" vif="user" >Кабинет</v-btn>
         <v-btn to="/user/signup" v-if="!user" id>Регистрация</v-btn>
         <v-btn to="/user/login" v-if="!user" id>Вход</v-btn>
         <v-btn @click="logout" v-if="user" id>Выход</v-btn>
@@ -57,8 +57,8 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('auth/logout')
-          .then(() => this.$router.push('/user/login'))
+      this.$auth.logout()
+      //this.$store.dispatch('auth.js.bak/logout')
     },
     switchTheme() {
       this.$vuetify.theme.isDark = !this.$vuetify.theme.isDark;
@@ -68,7 +68,6 @@ export default {
   created() {
     this.$vuetify.theme.isDark = JSON.parse(localStorage.getItem('themeDark'))
     //this.$axios.$get('/build-date')        .then(res => this.buildDate = res.ctime)
-    this.$store.dispatch('auth/getUser')
   },
 
 }

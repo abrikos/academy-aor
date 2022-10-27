@@ -49,11 +49,11 @@ export default {
     async registration() {
 
       if (!this.$refs.form.validate()) return console.log('Not valid')
-      this.$store.dispatch('auth/signup', this.form)
+      /*this.$store.dispatch('auth.js.bak/signup', this.form)
           .then(() => {
             this.$router.push(this.$store.getters.getLoginRedirect)
           })
-          .catch(console.error)
+          .catch(console.error)*/
     },
     rnd() {
       this.form.username = Math.random();

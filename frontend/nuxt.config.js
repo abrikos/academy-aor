@@ -78,8 +78,29 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/i18n',
+    '@nuxtjs/auth-next',
     'cookie-universal-nuxt',
   ],
+  auth:{
+    strategies: {
+      local: {
+        user: {
+          property: ''
+        },
+        endpoints: {
+          login: { url: '/auth/login', method: 'post' },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/auth/user', method: 'get' }
+        }
+      },
+    },
+    redirect: {
+      login: "/user/login",//this example of the path of login page in your project
+      logout: "/user/login", //this will redirect to your home after logout
+      home: "/cabinet/settings222", //this example will redirect to the path of user account page in your project.
+      callback: '/zzz/login',
+    }
+  },
   i18n: {
     locales: [
       {

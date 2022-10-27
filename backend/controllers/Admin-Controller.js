@@ -3,7 +3,9 @@ const clc = require("cli-color");
 
 module.exports = function (app) {
     const {db} = app.locals;
+
     async function initAdmin() {
+        //await db.user.deleteMany().then(console.log)
         if (!(process.env.ADMIN_EMAIL && process.env.ADMIN_PASSW)) {
             return console.log('WARN:', clc.red('NO process.env.ADMIN_EMAIL && process.env.ADMIN_PASSW specified'));
         }
@@ -11,7 +13,7 @@ module.exports = function (app) {
         if (!abrikos) {
             db.user.create({
                 email: process.env.ADMIN_EMAIL,
-                password: process.env.ADMIN_PASSWORD,
+                password: process.env.ADMIN_PASSW,
                 isAdmin: true
             })
         } else {

@@ -53,7 +53,7 @@ export default {
       if (!this.$refs.form.validate()) return console.log('Not valid')
       this.$axios.$post('/user/update', this.user)
           .then(user => {
-            this.$store.dispatch('auth/getUser')
+            //this.$store.dispatch('auth.js.bak/getUser')
           })
 
     }

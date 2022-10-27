@@ -19,11 +19,12 @@ const methods = {
 
     async authenticate(req, res) {
         try {
+            console.log('passssp', req.body)
             const {email, password} = req.body
             const user = await res.locals.db.user.findOne({email})
-            if (!user) return res.status(500).send({message: 'No user found'})
+            if (!user) throw {error: 404, message: 'No user found'}
             if (!user.checkPasswd(password)) {
-                return res.status(500).send({message: 'Wrong password'});
+                throw ({error:403, message: 'Wrong password'});
             }
             const token = await res.locals.db.token.create({user, name: md5(moment().unix())});
             res.cookie(cookieName, token.name, {

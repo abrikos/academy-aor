@@ -22,7 +22,7 @@ export const getters = {
 }
 
 export const actions = {
-  async nuxtServerInit({ state, commit, dispatch }) {
+  /*async nuxtServerInit({ state, commit, dispatch }) {
     const cookie = this.$cookies.get('auth');
     if (cookie) {
       commit('auth/setTokens', cookie.auth);
@@ -36,5 +36,5 @@ export const actions = {
         commit('auth/logout');
       }
     }
-  }
+  }*/
 };

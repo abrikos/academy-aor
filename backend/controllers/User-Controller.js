@@ -29,7 +29,7 @@ module.exports = function (app) {
 
   app.post('/api/auth/logout', passport.logout);
 
-  app.post('/api/auth/user', passport.isLogged, async (req, res) => {
+  app.get('/api/auth/user', passport.isLogged, async (req, res) => {
     const {user} = res.locals;
     res.send(passport.adaptUser(user))
   })
