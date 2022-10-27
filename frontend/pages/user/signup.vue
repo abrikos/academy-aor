@@ -41,7 +41,9 @@ export default {
         v => this.form.password === this.form.passwordConfirm || this.$t('Passwords do not match')
       ],
       form: {
-
+        email: Math.random()+'@t.co',
+        password: 1,
+        passwordConfirm: 1,
       },
     }
   },
@@ -49,11 +51,10 @@ export default {
     async registration() {
 
       if (!this.$refs.form.validate()) return console.log('Not valid')
-      /*this.$store.dispatch('auth.js.bak/signup', this.form)
-          .then(() => {
-            this.$router.push(this.$store.getters.getLoginRedirect)
+      this.$axios.$post('/user/signup', this.form)
+          .then(async (res)=>{
+            if(res) await this.$router.push(this.$store.getters.getLoginRedirect)
           })
-          .catch(console.error)*/
     },
     rnd() {
       this.form.username = Math.random();

@@ -7,8 +7,10 @@ const methods = {
     async getUser(req, res) {
         if (!req.cookies[cookieName]) return;
         const name = req.cookies[cookieName];
+
         const token = await res.locals.db.token.findOne({name})
           .populate('user')
+        console.log('COOKIE', name, token && 'TOKEN ACCEPTED')
         if (!token) return
         return token.user;
     },
@@ -19,7 +21,6 @@ const methods = {
 
     async authenticate(req, res) {
         try {
-            console.log('passssp', req.body)
             const {email, password} = req.body
             const user = await res.locals.db.user.findOne({email})
             if (!user) throw {error: 404, message: 'No user found'}

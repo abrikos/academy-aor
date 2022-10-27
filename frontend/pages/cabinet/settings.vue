@@ -1,32 +1,46 @@
 <template>
-  <v-container>
+  <div>
     <v-form
         ref="form"
         v-model="valid"
         lazy-validation
     >
-      <v-card
-          v-if="user"
-      >
-        <v-card-title>{{ $t('Settings') }}</v-card-title>
+      <v-card>
+        <v-card-title>{{ $t('Settings') }} {{user.fullName}}</v-card-title>
         <v-card-text>
           <v-text-field
               outlined
               :value="user.email"
               :label="$t('Email')"
               disabled
+              dense
           />
-          <v-text-field v-model="user.password" type="password" :label="$t('Password')" outlined/>
-          <v-text-field v-model="user.passwordConfirm" type="password" :label="$t('Confirm password')" outlined
-                        :rules="passwordRules"/>
-
+          <v-text-field v-for="field of user.fields" v-model="user[field.name]" :key="field.name" :label="field.label" outlined dense/>
         </v-card-text>
         <v-card-actions>
           <v-btn @click="update" color="primary" class="my-4">{{ $t('Save') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
-  </v-container>
+    <br/>
+    <v-form
+        ref="form-password"
+        v-model="valid"
+        lazy-validation
+    >
+      <v-card>
+        <v-card-title>{{ $t('Settings') }}</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="user.password" type="password" :label="$t('Password')" outlined dense/>
+          <v-text-field v-model="user.passwordConfirm" type="password" :label="$t('Confirm password')" outlined dense
+                        :rules="passwordRules"/>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="update" color="primary" class="my-4">Изменить пароль</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-form>
+  </div>
 </template>
 
 <script>
@@ -35,12 +49,16 @@ export default {
   name: "cabinet-settings",
   middleware: ['auth'],
   computed: {
-    user() {
+    user2() {
       return {...this.$store.getters.getLoggedUser}
     }
   },
+  created(){
+    this.loadUser()
+  },
   data() {
     return {
+      user: {},
       valid: false,
       passwordRules: [
         v => this.user.password === this.user.passwordConfirm || this.$t('Passwords do not match')
@@ -49,11 +67,14 @@ export default {
     }
   },
   methods: {
+    async loadUser(){
+      this.user = await this.$axios.$get('/auth/user');
+    },
     update() {
       if (!this.$refs.form.validate()) return console.log('Not valid')
       this.$axios.$post('/user/update', this.user)
           .then(user => {
-            //this.$store.dispatch('auth.js.bak/getUser')
+            this.user = user
           })
 
     }

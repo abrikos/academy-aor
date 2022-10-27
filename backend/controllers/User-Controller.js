@@ -10,7 +10,7 @@ module.exports = function (app) {
 
   app.post('/api/auth/login', passport.authenticate)
 
-  app.post('/api/auth/signup', async (req, res) => {
+  app.post('/api/user/signup', async (req, res) => {
     try {
       const {email, password, passwordConfirm} = req.body
       if (password !== passwordConfirm) throw {message: 'Passwords do not match'}
@@ -19,10 +19,6 @@ module.exports = function (app) {
       res.cookie(passport.cookieName, token.name)
       res.send(token.name);
     } catch (e) {
-      if (e.parent) {
-        e.message = 'Email exists'
-        //console.log(e.parent.sqlMessage)
-      }
       app.locals.errorLogger(e, res)
     }
   })
@@ -31,6 +27,12 @@ module.exports = function (app) {
 
   app.get('/api/auth/user', passport.isLogged, async (req, res) => {
     const {user} = res.locals;
+    res.send(passport.adaptUser(user))
+  })
+
+  app.post('/api/auth/refresh', passport.isLogged, async (req, res) => {
+    const {user} = res.locals;
+    console.log('zzzzzzzzzzzz', req.body)
     res.send(passport.adaptUser(user))
   })
 
@@ -82,13 +84,15 @@ module.exports = function (app) {
 
   app.post('/api/user/update', passport.isLogged, async (req, res) => {
     const {user} = res.locals;
-    const {username, password, passwordConfirm} = req.body;
-    user.fullname = username;
+    const {password, passwordConfirm} = req.body;
     if (password && passwordConfirm === password) {
       user.password = password
     }
+    for(const field of user.fields){
+      user[field.name] = req.body[field.name]
+    }
     await user.save()
-    res.sendStatus(200);
+    res.send(user);
   })
 
 }
