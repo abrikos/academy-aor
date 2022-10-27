@@ -10,7 +10,11 @@ const validateEmail = function(email) {
 };
 
 const schema = new Schema({
-    fullName: {type: String},
+    name: {type: String},
+    surname: {type: String},
+    patronymic: {type: String},
+    job: {type: String},
+    division: {type: String},
     isAdmin: {type: Boolean},
     email: {type: String,
       trim: true,
@@ -46,6 +50,11 @@ schema.virtual('password')
 schema.virtual('date')
     .get(function () {
         return moment(this.createdAt).format('YYYY-MM-DD HH:mm');
+    })
+
+schema.virtual('fullName')
+    .get(function () {
+        return `${this.surname} ${this.name} ${this.patronymic}`;
     })
 
 
