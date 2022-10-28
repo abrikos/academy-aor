@@ -30,10 +30,16 @@ module.exports = function (app) {
     res.send(passport.adaptUser(user))
   })
 
-  app.post('/api/auth/refresh', passport.isLogged, async (req, res) => {
-    const {user} = res.locals;
-    console.log('zzzzzzzzzzzz', req.body)
-    res.send(passport.adaptUser(user))
+  app.post('/api/auth/refresh', async (req, res) => {
+    try {
+      const {refresh_token} = req.body;
+      console.log('Auth Refresh called', req.body)
+      const token = await db.token.findOne({refresh_token})
+      await token.refresh()
+      res.send(token.access_token)
+    } catch (e) {
+      app.locals.errorLogger(e, res)
+    }
   })
 
 

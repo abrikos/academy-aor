@@ -1,21 +1,13 @@
 const md5 = require('md5')
 const moment = require('moment')
-const cookieName = 'authToken'
+const accessTokenName = 'auth._token.local'
+const refreshTokenName = 'auth._refresh_token.local'
 
 const methods = {
-    cookieName,
-    async getUser(req, res) {
-        if (!req.cookies[cookieName]) return;
-        const name = req.cookies[cookieName];
+    accessTokenName,
+    refreshTokenName,
 
-        const token = await res.locals.db.token.findOne({name})
-          .populate('user')
-        console.log('COOKIE', name, token && 'TOKEN ACCEPTED')
-        if (!token) return
-        return token.user;
-    },
-
-    adaptUser(user){
+    adaptUser(user) {
         return user
     },
 
@@ -25,48 +17,63 @@ const methods = {
             const user = await res.locals.db.user.findOne({email})
             if (!user) throw {error: 404, message: 'No user found'}
             if (!user.checkPasswd(password)) {
-                throw ({error:403, message: 'Wrong password'});
+                throw ({error: 403, message: 'Wrong password'});
             }
-            const token = await res.locals.db.token.create({user, name: md5(moment().unix())});
-            res.cookie(cookieName, token.name, {
+            const token = await res.locals.db.token.create({user});
+            /*console.log(token)
+            false && res.cookie(cookieName, token.name, {
                 secure: true,
                 //secure: process.env.NODE_ENV !== "development",
                 httpOnly: true,
                 expires: new Date(moment().add(30, 'days').toISOString()),
-            });
-            res.send(token.name)
+            });*/
+            res.send(token.access_token)
         } catch (e) {
             res.locals.errorLogger(e, res)
         }
     },
 
     async logout(req, res) {
-        const token = await res.locals.db.token.findOne({name: req.cookies[cookieName]});
+        const token = await res.locals.db.token.findOne({name: req.cookies[refreshTokenName]});
         if (!token) return;
         token.delete();
-        res.clearCookie(cookieName);
+        //res.clearCookie(cookieName);
         res.end();
     },
 
-    googleStrategy() {
-        console.log(this)
+    async getUser(req, res) {
+        console.log(req.cookies)
+        if (!req.cookies[accessTokenName]) return;
+        const access_token = req.cookies[accessTokenName].replace('Bearer ','');
+        const token = await res.locals.db.token.findOne({access_token})
+            .populate('user')
+        if (!token) return
+        return token.user;
     },
 
 }
 
 async function isLogged(req, res, next) {
-    const found = await methods.getUser(req, res);
-    if (!found) return res.status(401).send({status: 401, message: 'Must be logged user'})
-    res.locals.user = found;
-    return next()
+    try {
+        const found = await methods.getUser(req, res);
+        if (!found) throw({error: 401, message: 'Must be logged user'})
+        res.locals.user = found;
+        return next()
+    } catch (e) {
+        res.locals.errorLogger(e, res)
+    }
 }
 
 async function isAdmin(req, res, next) {
-    const found = await methods.getUser(req, res);
-    if (!found) return res.status(401).send({status: 401, message: 'Must be logged user'})
-    if (!found.isAdmin) return res.status(403).send({status: 401, message: 'Access denied'})
-    res.locals.user = found;
-    return next()
+    try {
+        const found = await methods.getUser(req, res);
+        if (!found) throw ({error: 401, message: 'Must be logged user'})
+        if (!found.isAdmin) throw ({error: 401, message: 'Access denied'})
+        res.locals.user = found;
+        return next()
+    } catch (e) {
+        res.locals.errorLogger(e, res)
+    }
 }
 
 module.exports = {...methods, isLogged, isAdmin}

@@ -90,7 +90,7 @@ export default {
                 scheme: 'refresh',
                 token: {
                     property: 'access_token',
-                    maxAge: 60 * 60 * 24 * 30,
+                    maxAge: 5,
                     global: true,
                     // type: 'Bearer'
                 },
