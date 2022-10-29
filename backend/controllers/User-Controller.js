@@ -33,7 +33,6 @@ module.exports = function (app) {
   app.post('/api/auth/refresh', async (req, res) => {
     try {
       const {refresh_token} = req.body;
-      console.log('Auth Refresh called', req.body)
       const token = await db.token.findOne({refresh_token})
       await token.refresh()
       res.send(token.access_token)

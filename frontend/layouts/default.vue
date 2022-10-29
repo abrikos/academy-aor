@@ -6,7 +6,7 @@
         <v-app-bar-nav-icon @click="drawer = true"
                             class="d-flex d-sm-none"
         ></v-app-bar-nav-icon>
-        <v-toolbar-title>Академия РС(Я) - ИБДДНС</v-toolbar-title>
+        <v-toolbar-title>Академия РС(Я) - ИБДДНС :: {{user.fullName}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="switchTheme" title="Переключение темы">
           <v-icon>mdi-theme-light-dark</v-icon>
@@ -40,7 +40,7 @@
               class="d-none d-sm-flex"
           >
             <v-tabs-slider color="yellow"></v-tabs-slider>
-            <v-tab v-for="item of items" :to="item.to" v-if="user" :key="item.to">{{item.label}}</v-tab>
+            <v-tab v-for="item of items" :to="'/cabinet/'+item.model" v-if="user" :key="item.to">{{item.label}}</v-tab>
           </v-tabs>
 
         </template>
@@ -58,18 +58,14 @@
           <v-list-item-group
           >
             <v-list-item v-for="(item, index) in items" :key="index" v-if="user">
-              <v-list-item-title :to="item.to">{{ item.label }}</v-list-item-title>
+              <v-list-item-title :to="'/cabinet/'+item.model">{{ item.label }}</v-list-item-title>
             </v-list-item>
 
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-
-
       <v-main>
-        <v-container>
           <nuxt/>
-        </v-container>
       </v-main>
       <SnackBar/>
     </v-app>
@@ -85,7 +81,7 @@ export default {
     return {
       drawer: false,
       tab: null,
-      items: process.env.pages,
+      items: [],
     }
   },
   computed: {
@@ -108,6 +104,11 @@ export default {
   },
   created() {
     this.$vuetify.theme.isDark = JSON.parse(localStorage.getItem('themeDark'))
+    this.$axios.$get('/models')
+        .then(res=> {
+          this.items = res
+          this.$store.commit('setPages',res)
+        })
     //this.$axios.$get('/build-date')        .then(res => this.buildDate = res.ctime)
   },
 
@@ -115,6 +116,10 @@ export default {
 </script>
 
 <style lang="sass">
+.container
+   width: 1024px
+.v-main >  div
+    padding: 0 15px
 #nav-bar
   z-index: 1000000
 

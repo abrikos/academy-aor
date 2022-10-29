@@ -42,7 +42,6 @@ const methods = {
     },
 
     async getUser(req, res) {
-        console.log(req.cookies)
         if (!req.cookies[accessTokenName]) return;
         const access_token = req.cookies[accessTokenName].replace('Bearer ','');
         const token = await res.locals.db.token.findOne({access_token})

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <v-form
         ref="form"
         v-model="valid"
@@ -40,7 +40,7 @@
         </v-card-actions>
       </v-card>
     </v-form>
-  </div>
+  </v-container>
 </template>
 
 <script>

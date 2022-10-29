@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('cli-color');
 const basename = path.basename(__filename);
+const modulesData = require('./dataModels/models')
 
 const modules ={};
 fs
@@ -23,6 +24,9 @@ fs
 
     });
 
+for(const module of modulesData.modules){
+  modules[module.collection.modelName] = (module)
+}
 module.exports = modules
 
 try {

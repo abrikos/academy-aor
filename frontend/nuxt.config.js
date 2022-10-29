@@ -42,18 +42,6 @@ export default {
         '~/plugins/axios',
     ],
 
-    env: {
-        pages: [
-            {to: "/cabinet/publication", label: "Публикации"},
-            {to: "/cabinet/grant", label: "Гранты, контракты"},
-            {to: "/cabinet/conference", label: "Конференции"},
-            {to: "/cabinet/report", label: "Доклады"},
-            {to: "/cabinet/patent", label: "Патенты"},
-            {to: "/cabinet/expert", label: "Экспертная работа"},
-            {to: "/cabinet/science", label: "Научно-организационная работа"},
-        ]
-    },
-
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 

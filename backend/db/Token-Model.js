@@ -20,7 +20,6 @@ const schema = new Schema({
 
 schema.methods.refresh = async function() {
     this.access_token = md5(Math.random())
-    console.log(this)
     await this.save()
 }
 
