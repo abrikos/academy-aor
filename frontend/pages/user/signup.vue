@@ -30,6 +30,11 @@ export default {
   name: "SignUp",
   auth: false,
   data() {
+    const form = window?.location.host === 'test.abrikos.pro' ? {
+      email: Math.random() + '@gmail.com',
+      password: '123',
+      passwordConfirm: '123',
+    } : {}
     return {
       valid: false,
       error: '',
@@ -40,21 +45,18 @@ export default {
       passwordRules: [
         v => this.form.password === this.form.passwordConfirm || this.$t('Passwords do not match')
       ],
-      form: {
-        email: Math.random()+'@t.co',
-        password: 1,
-        passwordConfirm: 1,
-      },
+      form,
     }
   },
   methods: {
     async registration() {
 
       if (!this.$refs.form.validate()) return console.log('Not valid')
-      this.$axios.$post('/user/signup', this.form)
-          .then(async (res)=>{
-            if(res) await this.$router.push(this.$store.getters.getLoginRedirect)
+      this.$axios.$post('/auth/signup', this.form)
+          .then(() => {
+            this.$router.push(this.$store.getters.getLoginRedirect)
           })
+          .catch(console.error)
     },
     rnd() {
       this.form.username = Math.random();
