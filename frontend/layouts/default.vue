@@ -6,7 +6,7 @@
         <v-app-bar-nav-icon @click="drawer = true"
                             class="d-flex d-sm-none"
         ></v-app-bar-nav-icon>
-        <v-toolbar-title>Академия РС(Я) - ИБДДНС :: {{user.fullName}}</v-toolbar-title>
+        <v-toolbar-title>Академия РС(Я) - ИБДДНС :: {{user?.fullName}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="switchTheme" title="Переключение темы">
           <v-icon>mdi-theme-light-dark</v-icon>

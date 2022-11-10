@@ -59,7 +59,7 @@ async function isLogged(req, res, next) {
         res.locals.user = found;
         return next()
     } catch (e) {
-        res.locals.errorLogger(e, res)
+        res.status(e.error).send(e)
     }
 }
 
@@ -71,7 +71,7 @@ async function isAdmin(req, res, next) {
         res.locals.user = found;
         return next()
     } catch (e) {
-        res.locals.errorLogger(e, res)
+        res.status(e.error).send(e)
     }
 }
 
