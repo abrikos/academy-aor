@@ -25,15 +25,33 @@ module.exports = function (app) {
     initAdmin()
 
     app.get('/api/admin/users', passport.isAdmin, async (req, res) => {
-        const users = await db.user.find()
-        res.send(users)
+        try {
+            const users = await db.user.find()
+            res.send(users)
+        } catch (e) {
+            app.locals.errorLogger(e, res)
+        }
     })
 
     app.post('/api/admin/switch-role', passport.isAdmin, async (req, res) => {
-        const user = await db.user.findById(req.body.id)
-        user.isAdmin = !user.isAdmin
-        await user.save()
-        res.sendStatus(200)
+        try {
+            const user = await db.user.findById(req.body.id)
+            user.isAdmin = !user.isAdmin
+            await user.save()
+            res.sendStatus(200)
+        } catch (e) {
+            app.locals.errorLogger(e, res)
+        }
+    })
+
+    app.delete('/api/admin/user/:id', passport.isAdmin, async (req, res) => {
+        try {
+            const user = await db.user.findById(req.params.id)
+            await user.delete()
+            res.sendStatus(200)
+        } catch (e) {
+            app.locals.errorLogger(e, res)
+        }
     })
 
 }
