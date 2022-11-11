@@ -50,11 +50,10 @@ export default {
   },
   methods: {
     async registration() {
-
       if (!this.$refs.form.validate()) return console.log('Not valid')
       this.$axios.$post('/auth/signup', this.form)
-          .then(() => {
-            this.$router.push(this.$store.getters.getLoginRedirect)
+          .then(res => {
+            if(res) this.$router.push(this.$store.getters.getLoginRedirect)
           })
           .catch(console.error)
     },

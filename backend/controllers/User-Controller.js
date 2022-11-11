@@ -13,11 +13,12 @@ module.exports = function (app) {
     app.post('/api/auth/signup', async (req, res) => {
         try {
             const {email, password, passwordConfirm} = req.body
-            if (password !== passwordConfirm) throw {message: 'Passwords do not match'}
+            if (password !== passwordConfirm) throw {message: 'Пароли не совпадают'}
+            if(await db.user.findOne({email}))throw {message: 'Email уже зарегистрирован'}
             const user = await db.user.create({email, password})
             const token = await db.token.create({user})
             //res.cookie(passport.cookieName, token.name)
-            res.send(token.name);
+            res.sendStatus(200);
         } catch (e) {
             app.locals.errorLogger(e, res)
         }

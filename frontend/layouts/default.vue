@@ -16,22 +16,19 @@
         <v-menu rounded="true" open-on-hover offset-y transition="slide-x-transition"
                 v-if="user?.isAdmin">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" title="Администратор">
-              <v-icon>mdi-shield-account</v-icon>
+            <v-btn v-bind="attrs" v-on="on" title="Администратор">
+              АДМИН
             </v-btn>
           </template>
           <v-list dense>
             <v-list-item to="/admin/users">
               <v-list-item-title>Users</v-list-item-title>
             </v-list-item>
-            <v-list-item to="/admin/upload">
-              <v-list-item-title>Upload example</v-list-item-title>
-            </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn to="/user/signup" v-if="!user" icon :title="$t('Signup')"><v-icon>mdi-account-plus</v-icon></v-btn>
-        <v-btn @click="logout" v-if="user" icon :title="$t('Logout')"><v-icon>mdi-logout-variant</v-icon></v-btn>
-        <v-btn to="/user/login" v-if="!user" icon :title="$t('Login')"><v-icon>mdi-login-variant</v-icon></v-btn>
+        <v-btn to="/user/signup" v-if="!user"  :title="$t('Signup')">Регистрация</v-btn>
+        <v-btn @click="logout" v-if="user"  :title="$t('Logout')">Выход</v-btn>
+        <v-btn to="/user/login" v-if="!user"  :title="$t('Login')">Вход</v-btn>
 
         <template v-slot:extension>
           <v-tabs
