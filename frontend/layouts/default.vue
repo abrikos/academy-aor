@@ -3,18 +3,18 @@
     <v-app app>
 
       <v-app-bar app>
-        <v-app-bar-nav-icon @click="drawer = true"
-                            class="d-flex d-sm-none"
-        ></v-app-bar-nav-icon>
-        <v-toolbar-title>Академия РС(Я) - ИБДДНС :: {{user?.fullName}}</v-toolbar-title>
+        <v-app-bar-nav-icon @click="drawer = true" class="d-flex d-sm-none"/>
+        <v-toolbar-title>Академия РС(Я) - ИБДДНС :: {{ user?.fullName }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="switchTheme" title="Переключение темы">
           <v-icon>mdi-theme-light-dark</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn to="/cabinet/settings" icon v-if="user" title="настройки пользователя"><v-icon>mdi-account-cog-outline</v-icon></v-btn>
-        <v-menu rounded="true" open-on-hover offset-y transition="slide-x-transition"
-                v-if="user?.isAdmin">
+        <v-btn to="/cabinet/settings" icon v-if="user" title="настройки пользователя">
+          <v-icon>mdi-account-cog-outline</v-icon>
+        </v-btn>
+        <v-menu rounded="true" open-on-hover offset-y transition="slide-x-transition" v-if="user?.isAdmin">
+
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" title="Администратор">
               АДМИН
@@ -26,9 +26,9 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn to="/user/signup" v-if="!user"  :title="$t('Signup')">Регистрация</v-btn>
-        <v-btn @click="logout" v-if="user"  :title="$t('Logout')">Выход</v-btn>
-        <v-btn to="/user/login" v-if="!user"  :title="$t('Login')">Вход</v-btn>
+        <v-btn to="/user/signup" v-if="!user" :title="$t('Signup')">Регистрация</v-btn>
+        <v-btn @click="logout" v-if="user" :title="$t('Logout')">Выход</v-btn>
+        <v-btn to="/user/login" v-if="!user" :title="$t('Login')">Вход</v-btn>
 
         <template v-slot:extension>
           <v-tabs
@@ -36,8 +36,9 @@
               align-with-title
               class="d-none d-sm-flex"
           >
-            <v-tabs-slider color="yellow"></v-tabs-slider>
-            <v-tab v-for="item of items" :to="'/cabinet/'+item.model" v-if="user" :key="item.to">{{item.label}}</v-tab>
+            <v-tabs-slider color="red"></v-tabs-slider>
+            <v-tab v-for="item of items" :to="'/cabinet/'+item.model" v-if="user" :key="item.to">{{ item.label }}
+            </v-tab>
           </v-tabs>
 
         </template>
@@ -62,7 +63,7 @@
         </v-list>
       </v-navigation-drawer>
       <v-main>
-          <nuxt/>
+        <nuxt/>
       </v-main>
       <SnackBar/>
     </v-app>
@@ -102,9 +103,9 @@ export default {
   created() {
     this.$vuetify.theme.isDark = JSON.parse(localStorage.getItem('themeDark'))
     this.$axios.$get('/models')
-        .then(res=> {
+        .then(res => {
           this.items = res
-          this.$store.commit('setPages',res)
+          this.$store.commit('setPages', res)
         })
     //this.$axios.$get('/build-date')        .then(res => this.buildDate = res.ctime)
   },
@@ -113,10 +114,15 @@ export default {
 </script>
 
 <style lang="sass">
+.v-app-bar
+  .v-toolbar__extension
+    //background-color: #7f828b
 .container
-   width: 1024px
-.v-main >  div
-    padding: 0 15px
+  width: 1024px
+
+.v-main > div
+  padding: 0 15px
+
 #nav-bar
   z-index: 1000000
 
