@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "front": "nuxt frontend",
+    "front": "nuxt frontend --port=4001",
     "backend:dev": "nodemon backend/server.js",
     "backend": "node backend/server.js",
     "generate": "nuxt generate frontend"

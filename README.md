@@ -1,4 +1,4 @@
-# SWC
+# Activity of researchers at ACADEMY OF SCIENCES OF THE REPUBLIC OF SAKHA (YAKUTIA)
 ## Env setup
 add environment in .env
 ```
