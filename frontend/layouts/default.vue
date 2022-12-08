@@ -36,7 +36,7 @@
               align-with-title
               class="d-none d-sm-flex"
           >
-            <v-tabs-slider color="red"></v-tabs-slider>
+            <v-tabs-slider color="red"  style="display: none"/>
             <v-tab v-for="item of items" :to="'/cabinet/'+item.model" v-if="user" :key="item.to">{{ item.label }}
             </v-tab>
           </v-tabs>

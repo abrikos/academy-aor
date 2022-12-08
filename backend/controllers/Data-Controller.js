@@ -7,7 +7,7 @@ module.exports = function (app) {
     app.get(`/api/:model/list`, passport.isLogged, async (req, res) => {
         const {user} = res.locals;
         const {model} = req.params;
-        const items = await db[model].find({user})
+        const items = await db[model].find({user, _id:{$ne:null}})
         //.populate(db[model].population)
         const relations = {}
         for (const path of db[model].population) {

@@ -12,7 +12,7 @@ const models =  {
             {name: 'publishData', label: 'Выходные данные'},
             {name: 'bases', label: 'Базы данных'},
             {name: 'isbn', label: 'Шифр ISBN (для монографий)'},
-            {name: 'year', label: 'Год публикации', type:'Number'},
+            {name: 'date', label: 'Дата публикации', type:'Date'},
             {name: 'volume', label: 'Том, выпуск, страница'},
             {name: 'doi', label: 'DOI'},
         ]
@@ -24,7 +24,7 @@ const models =  {
             {name: 'theme', label: 'Тема проекта или контракта'},
             {name: 'number', label: 'Внутренний номер или шифр контракта'},
             {name: 'authors', label: 'Список авторов-сотрудников ГБУ АН РС (Я)'},
-            {name: 'year', label: 'Год публикации', type: 'Number'},
+            {name: 'date', label: 'Год публикации', type: 'Date'},
         ]
     },
     conference: {
@@ -46,7 +46,7 @@ const models =  {
             {name: 'statusReport', label: 'Статус доклада', radio:['Пленарный','Устный','Стендовый']},
             {name: 'authors', label: 'Полный список авторов'},
             {name: 'reporter', label: 'Докладчик'},
-            {name: 'year', label: 'Год проведения конференции', type: 'Number'},
+            {name: 'date', label: 'Дата проведения конференции', type: 'Date'},
 
             {name: 'confName', label: 'Название конференции'},
             {name: 'volume', label: 'Номер тома и страницы в сборнике тезисов'},
@@ -117,9 +117,13 @@ for (const key of Object.keys(models)){
     //schema.statics.fields = model.fields;
     schema.statics.population = model.fields.filter(f=>f.ref).map(f=>f.ref)
 
-    schema.virtual('date')
+    schema.virtual('dateCreate')
         .get(function () {
             return moment(this.createdAt).format('YYYY-MM-DD HH:mm');
+        })
+    schema.virtual('dateFormatted')
+        .get(function () {
+            return moment(this.date).format('YYYY-MM-DD');
         })
     modules.push(mongoose.model(key, schema))
 }
