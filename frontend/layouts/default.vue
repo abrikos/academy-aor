@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <v-app app>
-
       <v-app-bar app>
         <v-app-bar-nav-icon @click="drawer = true" class="d-flex d-sm-none"/>
         <v-toolbar-title>Академия РС(Я) - ИБДДНС :: {{ user?.fullName }}</v-toolbar-title>
@@ -13,19 +12,14 @@
         <v-btn to="/cabinet/settings" icon v-if="user" title="настройки пользователя">
           <v-icon>mdi-account-cog-outline</v-icon>
         </v-btn>
-        <v-menu rounded="true" open-on-hover offset-y transition="slide-x-transition" v-if="user?.isAdmin">
 
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" title="Администратор">
-              АДМИН
-            </v-btn>
-          </template>
-          <v-list dense>
-            <v-list-item to="/admin/users">
-              <v-list-item-title>Users</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+
+        <template v-if="user?.isAdmin">
+          <v-btn title="Администратор" :to="adminItems[0].to" >
+            АДМИН
+          </v-btn>
+        </template>
+
         <v-btn to="/user/signup" v-if="!user" :title="$t('Signup')">Регистрация</v-btn>
         <v-btn @click="logout" v-if="user" :title="$t('Logout')">Выход</v-btn>
         <v-btn to="/user/login" v-if="!user" :title="$t('Login')">Вход</v-btn>
@@ -36,11 +30,10 @@
               align-with-title
               class="d-none d-sm-flex"
           >
-            <v-tabs-slider color="red"  style="display: none"/>
+            <v-tabs-slider color="red" style="display: none"/>
             <v-tab v-for="item of items" :to="'/cabinet/'+item.model" v-if="user" :key="item.to">{{ item.label }}
             </v-tab>
           </v-tabs>
-
         </template>
       </v-app-bar>
       <!-- Add a navigation bar -->
@@ -49,12 +42,8 @@
           absolute
           temporary
       >
-        <v-list
-            nav
-            dense
-        >
-          <v-list-item-group
-          >
+        <v-list nav dense>
+          <v-list-item-group v-model="adminItem">
             <v-list-item v-for="(item, index) in items" :key="index" v-if="user">
               <v-list-item-title :to="'/cabinet/'+item.model">{{ item.label }}</v-list-item-title>
             </v-list-item>
@@ -63,6 +52,18 @@
         </v-list>
       </v-navigation-drawer>
       <v-main>
+        <v-tabs
+            v-if="user.isAdmin"
+            v-model="tab2"
+            align-with-title
+            class="d-none d-sm-flex"
+        >
+          <v-tabs-slider color="red" style="display: none"/>
+          <v-tab v-for="item of adminItems" :to="item.to" :key="item.to">
+            {{ item.title }}
+          </v-tab>
+        </v-tabs>
+
         <nuxt/>
       </v-main>
       <SnackBar/>
@@ -79,7 +80,15 @@ export default {
     return {
       drawer: false,
       tab: null,
+      tab2: null,
+      adminItem: '/admin/reports',
       items: [],
+      adminItems: [
+
+        {to: '/admin/reports/publication', title: 'Список публикаций по разделам'},
+        {to: '/admin/scientists', title: 'Список публикаций по авторам'},
+        {to: '/admin/users', title: 'Список авторов'},
+      ]
     }
   },
   computed: {
@@ -116,7 +125,7 @@ export default {
 <style lang="sass">
 .v-app-bar
   .v-toolbar__extension
-    //background-color: #7f828b
+//background-color: #7f828b
 .container
   width: 1024px
 

@@ -14,6 +14,9 @@
         {{ item.component.description }}
       </template>
       <template v-slot:item.controls="{item}">
+        <v-btn :to="`/admin/scientist/${item.id}`" icon>
+          <v-icon>mdi-eye</v-icon>
+        </v-btn>
         <v-btn class="mx-2" small :color="item.isAdmin ? 'red' : 'silver' " @click="switchRole(item)" :title="item.isAdmin ? 'Revoke admin' : 'Make admin'">
           <v-icon>mdi-shield-account</v-icon>
         </v-btn>
@@ -32,6 +35,7 @@ export default {
     return {
       users: [],
       headers: [
+        {text: 'ФИО', value: 'fullName'},
         {text: 'e-mail', value: 'email'},
         {text: 'Date', value: 'date'},
         {text: '', value: 'controls'},

@@ -2,6 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 const isDev = process.env.NODE_ENV !== 'production'
 require('dotenv').config();
+const prodMode = process.env.NODE_ENV === 'production'
 
 export default {
     //loading: '~/components/LoadingBar.vue',
@@ -12,9 +13,15 @@ export default {
     },
     ssr: false,
     target: 'static',
-
     router: {
-        middleware: ['auth']
+        middleware: ['auth'],
+        extendRoutes(routes, resolve) {
+            routes.push({
+                name: 'adminReports',
+                path: '/admin/reports/:model',
+                component: resolve(__dirname, 'pages/admin/reports.vue')
+            })
+        }
     },
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -128,6 +135,7 @@ export default {
     },
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
+        //baseURL: prodMode ? "/api" : "https://academy.abrikos.pro/api",
         baseURL: "/api",
     },
     publicRuntimeConfig: {

@@ -24,6 +24,7 @@ fs
 
     });
 
+
 for(const module of modulesData.modules){
   modules[module.collection.modelName] = (module)
 }
