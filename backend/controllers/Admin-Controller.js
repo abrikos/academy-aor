@@ -1,6 +1,8 @@
 const passport = require('../passport');
 const clc = require("cli-color");
 const modulesData = require('../db/dataModels/models')
+const logger = require('../logger')
+
 module.exports = function (app) {
     const {db} = app.locals;
 
@@ -35,6 +37,7 @@ module.exports = function (app) {
     app.get('/api/admin/users', passport.isAdmin, async (req, res) => {
         try {
             const users = await db.user.find()
+                .populate(db.user.population)
             res.send(users)
         } catch (e) {
             app.locals.errorLogger(e, res)

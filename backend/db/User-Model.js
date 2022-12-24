@@ -3,6 +3,8 @@ const md5 = require("md5");
 const moment = require("moment");
 const Schema = mongoose.Schema;
 const name = 'user';
+const modulesData = require('../db/dataModels/models')
+console.log(modulesData)
 
 const validateEmail = function (email) {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -40,6 +42,8 @@ schema.methods.checkPasswd = function (passwd) {
     return md5(passwd) === this.passwordHash;
 }
 
+schema.statics.population = modulesData.modelsArray.map(p=>({path:p.model}))
+
 schema.virtual('password')
     .get(function () {
         return '';
@@ -70,11 +74,14 @@ schema.virtual('tokens', {
     foreignField: 'user'
 })
 
-schema.virtual('assemblies', {
-    ref: 'assembly',
-    localField: '_id',
-    foreignField: 'user'
-})
+for(const model of modulesData.modelsArray) {
+    schema.virtual(model.model, {
+        ref: model.model,
+        localField: '_id',
+        foreignField: 'user',
+        count: true
+    })
+}
 
 
 module.exports = mongoose.model(name, schema)

@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-data-table
+        v-if="users.length"
         :headers="headers"
         :items="users"
         :items-per-page="15"
@@ -10,18 +11,24 @@
       <template v-slot:no-data>
         Ни чего не найдено
       </template>
-      <template v-slot:item.description="{ item }">
-        {{ item.component.description }}
+      <template v-slot:item.fullName="{item}">
+        <router-link :to="`/admin/scientist/${item.id}`">{{item.fullName}}</router-link>
       </template>
+      <template v-slot:item.date="{item}">
+        <small>{{item.date}}</small>
+      </template>
+<!--      <template v-for="m of this.$store.state.pages" v-slot:item.grant="{item}">
+        {{m.model}}
+      </template>-->
       <template v-slot:item.controls="{item}">
-        <v-btn :to="`/admin/scientist/${item.id}`" icon>
-          <v-icon>mdi-eye</v-icon>
+        <v-btn :to="`/admin/scientist/${item.id}`" icon x-small>
+          <v-icon x-small>mdi-eye</v-icon>
         </v-btn>
-        <v-btn class="mx-2" small :color="item.isAdmin ? 'red' : 'silver' " @click="switchRole(item)" :title="item.isAdmin ? 'Revoke admin' : 'Make admin'">
-          <v-icon>mdi-shield-account</v-icon>
+        <v-btn x-small :color="item.isAdmin ? 'red' : 'silver' " @click="switchRole(item)" :title="item.isAdmin ? 'Revoke admin' : 'Make admin'" icon>
+          <v-icon x-small>mdi-shield-account</v-icon>
         </v-btn>
-        <v-btn icon color="red" @click="deleteUser(item)">
-          <v-icon>mdi-delete</v-icon>
+        <v-btn x-small icon color="red" @click="deleteUser(item)">
+          <v-icon x-small>mdi-delete</v-icon>
         </v-btn>
       </template>
     </v-data-table>
@@ -34,16 +41,23 @@ export default {
   data() {
     return {
       users: [],
-      headers: [
-        {text: 'ФИО', value: 'fullName'},
-        {text: 'e-mail', value: 'email'},
-        {text: 'Date', value: 'date'},
-        {text: '', value: 'controls'},
-      ]
     }
   },
   created() {
     this.reloadList()
+  },
+  computed:{
+    headers(){
+      const headers = [
+        {text: 'ФИО', value: 'fullName'},
+        {text: 'e-mail', value: 'email'},
+        ...this.$store.state.pages.map(p=>({text:p.label, value:p.model})),
+        {text: 'Date', value: 'date', width: 130},
+        {text: '', value: 'controls', width:100},
+      ]
+      console.log('zzzzzzzz', this.$store.state.pages)
+      return headers
+    }
   },
   methods: {
     reloadList() {
@@ -64,6 +78,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="sass">
 </style>

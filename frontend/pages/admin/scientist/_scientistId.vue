@@ -52,7 +52,6 @@ export default {
       return this.$store.state.pages.find(p=>p.model === this.page)
     },
     currentItem(){
-      console.log('zzzzz',this.page, this.items)
       return this.items.find(p=>p.model === this.page)
     },
     pages() {

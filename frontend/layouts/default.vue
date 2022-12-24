@@ -15,14 +15,20 @@
 
 
         <template v-if="user?.isAdmin">
-          <v-btn title="Администратор" :to="adminItems[0].to" >
-            АДМИН
+          <v-btn class="" title="Администратор" :to="adminItems[0].to" icon>
+            <v-icon>mdi-crown</v-icon>
           </v-btn>
         </template>
 
-        <v-btn to="/user/signup" v-if="!user" :title="$t('Signup')">Регистрация</v-btn>
-        <v-btn @click="logout" v-if="user" :title="$t('Logout')">Выход</v-btn>
-        <v-btn to="/user/login" v-if="!user" :title="$t('Login')">Вход</v-btn>
+        <v-btn to="/user/signup" v-if="!user" :title="$t('Signup')">
+          <v-icon>mdi-account-plus</v-icon>
+        </v-btn>
+        <v-btn @click="logout" v-if="user" :title="$t('Logout')" icon>
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+        <v-btn to="/user/login" v-if="!user" :title="$t('Login')">
+          <v-icon>mdi-login</v-icon>
+        </v-btn>
 
         <template v-slot:extension>
           <v-tabs
@@ -53,7 +59,7 @@
       </v-navigation-drawer>
       <v-main>
         <v-tabs
-            v-if="user.isAdmin"
+            v-if="user && user.isAdmin"
             v-model="tab2"
             align-with-title
             class="d-none d-sm-flex"
@@ -86,7 +92,6 @@ export default {
       adminItems: [
 
         {to: '/admin/reports/publication', title: 'Список публикаций по разделам'},
-        {to: '/admin/scientists', title: 'Список публикаций по авторам'},
         {to: '/admin/users', title: 'Список авторов'},
       ]
     }
