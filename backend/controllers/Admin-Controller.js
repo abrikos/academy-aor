@@ -31,7 +31,6 @@ module.exports = function (app) {
     app.get('/api/admin/user/:id', passport.isAdmin, async (req, res) => {
         const {id} = req.params
 
-
         res.send(await userData(id))
     })
     app.get('/api/admin/users', passport.isAdmin, async (req, res) => {
@@ -39,6 +38,17 @@ module.exports = function (app) {
             const users = await db.user.find()
                 .populate(db.user.population)
             res.send(users)
+        } catch (e) {
+            app.locals.errorLogger(e, res)
+        }
+    })
+
+    app.post('/api/admin/new-password', passport.isAdmin, async (req, res) => {
+        try {
+            const user = await db.user.findById(req.body.user.id)
+            user.password = req.body.password
+            await user.save()
+            res.sendStatus(200)
         } catch (e) {
             app.locals.errorLogger(e, res)
         }

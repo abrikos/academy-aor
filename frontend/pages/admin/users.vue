@@ -21,6 +21,9 @@
         {{m.model}}
       </template>-->
       <template v-slot:item.controls="{item}">
+        <v-btn icon x-small @click="setPassword(item)">
+          <v-icon x-small>mdi-form-textbox-password</v-icon>
+        </v-btn>
         <v-btn :to="`/admin/scientist/${item.id}`" icon x-small>
           <v-icon x-small>mdi-eye</v-icon>
         </v-btn>
@@ -53,13 +56,17 @@ export default {
         {text: 'e-mail', value: 'email'},
         ...this.$store.state.pages.map(p=>({text:p.label, value:p.model})),
         {text: 'Date', value: 'date', width: 130},
-        {text: '', value: 'controls', width:100},
+        {text: '', value: 'controls', width:150},
       ]
-      console.log('zzzzzzzz', this.$store.state.pages)
       return headers
     }
   },
   methods: {
+    async setPassword(user){
+      const password = window.prompt('Введите новый пароль')
+      await this.$axios.$post('/admin/new-password', {user, password})
+      await this.reloadList()
+    },
     reloadList() {
       this.$axios.$get('/admin/users')
           .then(res => this.users = res)
