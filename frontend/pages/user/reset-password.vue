@@ -24,6 +24,7 @@
 <script>
 export default {
   name: "reset-password",
+  auth: 'guest',
   data() {
     return {
       valid: false,

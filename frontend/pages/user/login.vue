@@ -20,7 +20,7 @@
       <v-card-actions>
         <v-btn @click="submit" class="my-4">{{ $t('Send') }}</v-btn>
         <v-spacer/>
-        <v-btn to="'/user/reset-password'" class="my-4">{{ $t('Reset password') }}</v-btn>
+        <v-btn to="/user/reset-password" class="my-4">{{ $t('Reset password') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
