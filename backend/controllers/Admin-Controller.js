@@ -20,7 +20,6 @@ module.exports = function (app) {
                     items[year][model] = await db[model].find({date:{$gte:`${year}-01-01`, $lt:`${year+1}-01-01`}}).sort({createdAt: -1}).populate(['user', ...db[model].population])
                 }
             }
-            logger(items)
             res.send(items)
         } catch (e) {
             app.locals.errorLogger(e, res)
