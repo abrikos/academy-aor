@@ -1,5 +1,6 @@
 const passport = require("../passport");
 const {modelsArray} = require("../db/dataModels/models");
+const logger = require('../logger')
 
 module.exports = function (app) {
     const {db} = app.locals;
@@ -7,7 +8,7 @@ module.exports = function (app) {
     app.get(`/api/:model/list`, passport.isLogged, async (req, res) => {
         const {user} = res.locals;
         const {model} = req.params;
-        const items = await db[model].find({user, _id:{$ne:null}})
+        const items = await db[model].find({user, _id: {$ne: null}}).sort({createdAt: -1})
         //.populate(db[model].population)
         const relations = {}
         for (const path of db[model].population) {
@@ -21,6 +22,29 @@ module.exports = function (app) {
         const {_id, model} = req.params;
         await db[model].deleteOne({_id, user})
         res.sendStatus(200)
+    })
+
+    app.post('/api/:model/:_id/upload', passport.isLogged, async (req, res) => {
+        try {
+            const {user} = res.locals;
+            const {_id, model} = req.params
+            await req.files.file.mv(`./upload/${_id}.pdf`)
+            const item = await db[model].findOne({_id, user})
+            item.pdf = true;
+            await item.save()
+            return res.sendStatus(200)
+        } catch (e) {
+            app.locals.errorLogger(e, res)
+        }
+    })
+
+    app.get('/api/:model/:_id/pdf', async (req, res) => {
+        const {_id, model} = req.params;
+        const spec = await db[model].findById(_id);
+        if (!spec) res.sendStatus(404)
+        //res.setHeader('Content-Type', 'application/pdf');
+        //res.setHeader("Content-Disposition", "attachment; filename=" + encodeURIComponent(spec.name) + ".pdf");
+        res.download(`${__dirname}/../../upload/${_id}.pdf`, spec.name + ".pdf");
     })
 
     app.put(`/api/:model/:_id`, passport.isLogged, async (req, res) => {

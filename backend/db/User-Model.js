@@ -4,7 +4,6 @@ const moment = require("moment");
 const Schema = mongoose.Schema;
 const name = 'user';
 const modulesData = require('../db/dataModels/models')
-console.log(modulesData)
 
 const validateEmail = function (email) {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -64,7 +63,9 @@ schema.virtual('fields')
 
 schema.virtual('fullName')
     .get(function () {
-        return this.surname + ' ' + this.name +' ' +this.patronymic;
+        const name = this.surname + ' ' + this.name +' ' +this.patronymic
+
+        return name.trim() || this.email;
     })
 
 

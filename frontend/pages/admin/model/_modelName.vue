@@ -2,19 +2,22 @@
   v-row
     v-col(sm="2")
       v-list(v-model="tab" height="100vh" )
-        v-list-item(v-for="item of pages" :to="'/admin/reports/'+item.model" :key="item.to")
+        v-list-item(v-for="item of pages" :to="'/admin/model/'+item.model" :key="item.to")
           v-list-item-title(class="text-wrap") {{ item.label }}
     v-col
       div.model-item(v-for="item of items")
         h3 {{item.name}}
         router-link.user-name(:to="`/admin/scientist/${item.user.id}`") {{item.user.fullName}}
         //div {{pages}}
-        Publiaction(:page="page" :item="item")
+        ModelTable(:page="page" :item="item")
 </template>
 
 <script>
+import ModelTable from "~/components/ModelTable.vue";
+
 export default {
-  name: "reports",
+  name: "AdminModelName",
+  components: {ModelTable},
   data() {
     return {
       items: [],

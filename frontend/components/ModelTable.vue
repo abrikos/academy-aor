@@ -3,12 +3,17 @@
     tbody
       tr(v-for="field of page.fields")
         td {{field.label}}
-        td {{field.ref ? item[field.name].name : item[field.name]}}
+        td {{field.ref ? item[field.name] && item[field.name].name : item[field.name]}}
+      tr
+        td(colspan=2)
+          div.d-flex.justify-space-around
+            a(:href="item.link" target="_blank" v-if="item.link" ) Ссылка
+            a(:href="item.pdfLink" v-if="item.pdf" ) PDF
 </template>
 
 <script>
 export default {
-  name: "Publiaction",
+  name: "ModelTable",
   props: ['page', 'item']
 }
 </script>

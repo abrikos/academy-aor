@@ -10,16 +10,17 @@
       v-col
         h1 {{user.fullName}}
         div(v-for="d of currentItem.data")
-          Publiaction(:page="currentPage" :item="d")
+          ModelTable(:page="currentPage" :item="d")
 
 </template>
 
 <script>
-import Publiaction from "~/components/Publiaction.vue";
+
+import ModelTable from "~/components/ModelTable.vue";
 
 export default {
   name: "admin-scientist",
-  components: {Publiaction},
+  components: {ModelTable},
   data(){
     return {
       tab:null,

@@ -24,7 +24,7 @@ const models =  {
             {name: 'theme', label: 'Тема проекта или контракта'},
             {name: 'number', label: 'Внутренний номер или шифр контракта'},
             {name: 'authors', label: 'Список авторов-сотрудников ГБУ АН РС (Я)'},
-            {name: 'date', label: 'Год публикации', type: 'Date'},
+            {name: 'date', label: 'Дата публикации', type: 'Date'},
         ]
     },
     conference: {
@@ -59,7 +59,7 @@ const models =  {
             {name: 'name', label: 'Вид РИД (патент на изобретение, база данных, иное - указать'},
             {name: 'authors', label: 'Полный список авторов'},
             {name: 'number', label: 'Номер свидетельства РИД'},
-            {name: 'publishDate', label: 'Дата публикации'},
+            {name: 'date', label: 'Дата публикации', type: 'Date'},
         ]
     },
     expert: {
@@ -97,6 +97,8 @@ for (const key of Object.keys(models)){
     const model = models[key]
     const schemaObject = {
         user: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
+        link: String,
+        pdf: Boolean
     }
 
     for(const field of model.fields){
@@ -117,6 +119,10 @@ for (const key of Object.keys(models)){
     //schema.statics.fields = model.fields;
     schema.statics.population = model.fields.filter(f=>f.ref).map(f=>f.ref)
 
+    schema.virtual('pdfLink')
+        .get(function () {
+            return `/${this.constructor.modelName}/${this.id}/pdf`;
+        })
     schema.virtual('dateCreate')
         .get(function () {
             return moment(this.createdAt).format('YYYY-MM-DD HH:mm');

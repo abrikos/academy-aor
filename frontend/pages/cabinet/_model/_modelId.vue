@@ -8,7 +8,7 @@
           <!--          <div v-for="(n,i) in 100" :key="i">-->
           <div v-for="(item, i) of items" :key="i" @click="selectRecord(item)"
                :class="item.id === record.id ? 'active': ''" :id="'record-'+item.id">
-            {{formatDate(item.date)}}
+            {{ formatDate(item.date) }}
             {{ item.name?.length > 200 ? item.name.substr(0, 200) + '...' : item.name }}
           </div>
           <!--          </div>-->
@@ -61,11 +61,17 @@
             <div v-if="controlType(field) === 'datepicker'">TODO datepicker</div>
           </div>
         </div>
+        <v-text-field label="Ссылка" v-model="record.link" outlined/>
+        <div v-if="record.id">
+          <input type="file" accept=".pdf" @change="upload" ref="uploadInput" hidden/>
+          <v-btn @click="$refs.uploadInput.click()">Загрузить PDF</v-btn>
+          <a :href="record.pdfLink" target="_blank" v-if="record.pdf">Скачать PDF</a>
+        </div>
         <hr/>
         <v-row>
           <v-col sm="6">
             <v-btn @click="saveRecord" small color="primary">Сохранить</v-btn>
-            <v-btn @click="record = {}" v-if="record.id" small>Создать новое</v-btn>
+            <v-btn @click="selectRecord({id:''})" v-if="record.id" small>Создать новое</v-btn>
           </v-col>
           <v-col><span v-if="record.id">Дата создания: <i>{{ record.dateCreate }}</i></span></v-col>
           <v-col>
@@ -82,19 +88,24 @@
 import moment from "moment/moment";
 
 export default {
-  name: "publication",
+  name: "ModelId",
   data() {
     return {
       menu: null,
       activePicker: null,
       items: [],
       relations: {},
-      record: {}
     }
   },
   computed: {
     model() {
       return this.$route.params.model
+    },
+    id() {
+      return this.$route.params.modelId
+    },
+    record() {
+      return this.items.find(i => i.id === this.id) || {}
     },
     page() {
       return this.$store.state.pages.find(p => p.model === this.$route.params.model)
@@ -104,25 +115,30 @@ export default {
     this.getList()
   },
   methods: {
+    async upload(e) {
+      let formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      await this.$axios.$post(`/${this.model}/${this.id}/upload`, formData)
+      this.$refs.uploadInput.value = null
+      await this.getList()
+    },
     formatDate(date) {
-      if(!date) return
+      if (!date) return
       return moment(date).format('DD.MM.YYYY')
       //this.$refs.menuDate.save(date)
     },
     selectRecord(item) {
-      this.record = item
-      const myElement = document.getElementById('record-' + item.id);
-      const topPos = myElement.offsetTop;
-      console.log(myElement, topPos)
+      return this.$router.push(`/cabinet/${this.model}/${item.id}`)
     },
     async deleteRecord() {
       await this.$axios.$delete(`/${this.model}/${this.record.id}`)
-      this.record = {}
+      return this.$router.push(`/cabinet/${this.model}`)
       await this.getList()
     },
     async saveRecord() {
       const res = await this.$axios.$put(`/${this.model}/${this.record.id}`, this.record)
-      this.record = res || {}
+      return this.$router.push(`/cabinet/${this.model}/${res.id}`)
+      //this.record = res || {}
       await this.getList()
     },
     controlType(field) {

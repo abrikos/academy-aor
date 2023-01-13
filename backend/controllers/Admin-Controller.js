@@ -2,30 +2,56 @@ const passport = require('../passport');
 const clc = require("cli-color");
 const modulesData = require('../db/dataModels/models')
 const logger = require('../logger')
+const moment = require("moment/moment");
 
 module.exports = function (app) {
     const {db} = app.locals;
 
-    app.get('/api/admin/model/:model', passport.isAdmin, async (req, res) => {
-        const {model} = req.params
-        const items = await db[model].find().populate(['user', ...db[model].population])
-        const relations = {}
-        for (const path of db[model].population) {
-            relations[path] = (await db[path].find().sort({createdAt: 'desc'}))
+
+    app.get('/api/admin/years', passport.isAdmin, async (req, res) => {
+        try {
+            const modelsWithDate = modulesData.modelsArray.filter(m => m.fields.find(f => f.type === 'Date'));
+            const items = {}
+            const relations = {}
+            for (let year = moment().format('YYYY') * 1; year > 1997; year--) {
+                items[year] = {}
+                for (const item of modelsWithDate) {
+                    const {model} = item
+                    items[year][model] = await db[model].find({date:{$gte:`${year}-01-01`, $lt:`${year+1}-01-01`}}).sort({createdAt: -1}).populate(['user', ...db[model].population])
+                }
+            }
+            logger(items)
+            res.send(items)
+        } catch (e) {
+            app.locals.errorLogger(e, res)
         }
-        res.send({items, relations})
     })
 
-    async function userData(id){
+    app.get('/api/admin/model/:model', passport.isAdmin, async (req, res) => {
+        try {
+            const {model} = req.params
+            const items = await db[model].find().sort({createdAt: -1}).populate(['user', ...db[model].population])
+            const relations = {}
+            for (const path of db[model].population) {
+                relations[path] = (await db[path].find().sort({createdAt: 'desc'}))
+            }
+            res.send({items, relations})
+        } catch (e) {
+            app.locals.errorLogger(e, res)
+        }
+    })
+
+    async function userData(id) {
         const user = await db.user.findById(id);
         const items = []
-        for(const {model} of modulesData.modelsArray){
+        for (const {model} of modulesData.modelsArray) {
             const relations = {}
             const data = await db[model].find({user}).populate(db[model].population)
             items.push({model, data})
         }
         return {items, user}
     }
+
     //userData('6386aaefd61c6ea46a390a84')
 
     app.get('/api/admin/user/:id', passport.isAdmin, async (req, res) => {

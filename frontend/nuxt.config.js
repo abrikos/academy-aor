@@ -15,13 +15,13 @@ export default {
     target: 'static',
     router: {
         middleware: ['auth'],
-        extendRoutes(routes, resolve) {
+        /*extendRoutes(routes, resolve) {
             routes.push({
                 name: 'adminReports',
                 path: '/admin/reports/:model',
                 component: resolve(__dirname, 'pages/admin/reports.vue')
             })
-        }
+        }*/
     },
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
