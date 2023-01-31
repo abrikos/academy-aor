@@ -71,8 +71,10 @@
         </v-tabs>
 
         <nuxt/>
+        <footer>Build: {{buildDate}}</footer>
       </v-main>
       <SnackBar/>
+
     </v-app>
   </div>
 </template>
@@ -89,6 +91,7 @@ export default {
       tab2: null,
       adminItem: '/admin/reports',
       items: [],
+      buildDate:'',
       adminItems: [
 
         {to: '/admin/model/publication', title: 'Список публикаций по разделам'},
@@ -122,7 +125,7 @@ export default {
           this.items = res
           this.$store.commit('setPages', res)
         })
-    //this.$axios.$get('/build-date')        .then(res => this.buildDate = res.ctime)
+    this.$axios.$get('/build-date')        .then(res => this.buildDate = res.ctime)
   },
 
 }
