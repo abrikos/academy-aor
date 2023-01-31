@@ -27,7 +27,8 @@ export default {
   },
   computed:{
     model(){
-      return this.$route.params.model || 'publication'
+
+      return this.$route.params.modelName || 'publication'
     },
     page() {
       return this.pages.find(p => p.model === this.model)

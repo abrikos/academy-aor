@@ -2,7 +2,7 @@
   table
     tbody
       tr(v-for="field of page.fields")
-        td {{field.label}}
+        td {{field.label}} {{page.model}}
         td {{field.ref ? item[field.name] && item[field.name].name : item[field.name]}}
       tr
         td(colspan=2)
