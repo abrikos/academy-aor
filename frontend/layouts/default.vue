@@ -74,7 +74,6 @@
         <footer>Build: {{buildDate}}</footer>
       </v-main>
       <SnackBar/>
-
     </v-app>
   </div>
 </template>
