@@ -71,7 +71,7 @@
         </v-tabs>
 
         <nuxt/>
-        <footer>Build: {{buildDate}}</footer>
+        <small>Версия приложения: {{buildDate}}</small>
       </v-main>
       <SnackBar/>
     </v-app>

@@ -1,12 +1,15 @@
 <template>
-  <div>
+  <v-container>
+    <v-card style="text-align: center">
     {{$t('Password change confirmation code sent to email')}}
-  </div>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: "reset-password-confirm"
+  name: "reset-password-confirm",
+  auth: 'guest',
 }
 </script>
 
