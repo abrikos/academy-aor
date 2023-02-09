@@ -71,7 +71,9 @@
         </v-tabs>
 
         <nuxt/>
+        <div class="d-flex justify-end">
         <small>Версия приложения: {{buildDate}}</small>
+        </div>
       </v-main>
       <SnackBar/>
     </v-app>
