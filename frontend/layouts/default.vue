@@ -98,6 +98,7 @@ export default {
         {to: '/admin/model/publication', title: 'Список публикаций по разделам'},
         {to: '/admin/users', title: 'Список авторов'},
         {to: '/admin/years', title: 'По годам'},
+        {to: '/admin/prnd', title: 'ПРНД'},
       ]
     }
   },

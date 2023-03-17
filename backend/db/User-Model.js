@@ -41,7 +41,10 @@ schema.methods.checkPasswd = function (passwd) {
     return md5(passwd) === this.passwordHash;
 }
 
-schema.statics.population = modulesData.modelsArray.map(p=>({path:p.model}))
+schema.statics.population = [
+    ...modulesData.modelsArray.map(p=>({path:p.model})),
+    'prnds'
+]
 
 schema.virtual('password')
     .get(function () {
@@ -71,6 +74,12 @@ schema.virtual('fullName')
 
 schema.virtual('tokens', {
     ref: 'token',
+    localField: '_id',
+    foreignField: 'user'
+})
+
+schema.virtual('prnds', {
+    ref: 'prnd',
     localField: '_id',
     foreignField: 'user'
 })

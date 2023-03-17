@@ -55,9 +55,17 @@ module.exports = function (app) {
 
     app.get('/api/admin/user/:id', passport.isAdmin, async (req, res) => {
         const {id} = req.params
-
         res.send(await userData(id))
     })
+
+    app.put('/api/admin/user/:id/prnd', passport.isAdmin, async (req, res) => {
+        const {id} = req.params
+        const {year,value} = req.body
+        const user = await db.user.findById(id);
+        await db.prnd.updateOne({user, year}, {value}, {upsert: true})
+        res.sendStatus(200)
+    })
+
     app.get('/api/admin/users', passport.isAdmin, async (req, res) => {
         try {
             const users = await db.user.find()
