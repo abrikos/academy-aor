@@ -29,7 +29,7 @@ export default {
   methods:{
     userPrnd(year, user){
       const found = user.prnds.find(p=>p.year===year)
-      if(!found) return 0
+      if(!found) return
       return found.value
     },
     inputChanged(e){
