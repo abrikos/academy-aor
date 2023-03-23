@@ -8,8 +8,6 @@ MONGODB_URI=mongodb://localhost:27017/<DB-NAME>
 MAIL_USER=<sender email>
 MAIL_PASSWORD=<sender password>
 
-ADMIN_EMAIL=<admin email>>
-ADMIN_PASSW=<admin passw>
 ```
 ## Build Setup
 
