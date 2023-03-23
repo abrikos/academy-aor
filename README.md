@@ -14,6 +14,8 @@ MAIL_PASSWORD=<sender password>
 ```bash
 # install dependencies
 $ yarn install
+#or
+$ npm install
 
 # serve with hot reload at localhost:3000 and localhost:process.env.API_PORT 
 $ yarn front
