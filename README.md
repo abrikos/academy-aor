@@ -1,6 +1,6 @@
 # Activity of researchers at ACADEMY OF SCIENCES OF THE REPUBLIC OF SAKHA (YAKUTIA)
 ## Env setup
-add environment in .env
+add environment in .env at root of project
 ```
 API_PORT=<PORT>
 MONGODB_URI=mongodb://localhost:27017/<DB-NAME>
